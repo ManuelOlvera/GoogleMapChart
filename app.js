@@ -4,9 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var api = require('./routes/api');
 
 var app = express();
 
@@ -22,8 +23,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+app.use('/', function(req, res, next) {
+  // console.log('global.db', global.db);
+  if (global.db) {
+    console.log('we are already connected to the DB');
+    next();
+  } else {
+    console.log('connecting to db');
+    global.db = {};
+    mongoose.connect('mongodb://localhost/map');
+    global.db.connector = mongoose.connection;
+    global.db.connector.on('error', function() { console.error('connection error:'); });
+    global.db.connector.once('open', function() {
+      // we're connected!
+      console.log('we are connected');
+      next();
+    });
+  }
+}, routes);
+
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

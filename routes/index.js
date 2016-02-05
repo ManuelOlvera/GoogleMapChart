@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
   if (!global.db.mapSchema) {
     global.db.mapSchema = mongoose.Schema({
       name: String,
-      countries: [String]
+      countries: String
     });
     global.db.Map = mongoose.model('Map', global.db.mapSchema);
   }

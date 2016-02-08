@@ -4,34 +4,46 @@ var express = require('express'),
 
 /* GET all countries for both me and chau */
 router.get('/', function(req, res, next) {
-  console.log('router /'); 
-  /* get all the maps (chau's and mine) */
-  Map.find({}, function(err, maps) {
-    if (err) { throw err; }
-    console.log('maps ', maps);
-    var joinedMap = []
-    maps.forEach(function(elem, index) {
-      maps[index].countries.forEach(function(country) {
-        joinedMap.push(country);
+  console.log('login is session req.session.passport', req.session.passport);
+  // check if there's a valid session
+  if (req.session.passport) {
+    console.log('router /'); 
+    /* get all the maps (chau's and mine) */
+    Map.find({}, function(err, maps) {
+      if (err) { throw err; }
+      console.log('maps ', maps);
+      var joinedMap = []
+      maps.forEach(function(elem, index) {
+        maps[index].countries.forEach(function(country) {
+          joinedMap.push(country);
+        });
       });
+      var mapData = formatData(maps);
+      res.render('index', { map: mapData});
     });
-    var mapData = formatData(maps);
-    res.render('index', { map: mapData});
-  });
+  } else {
+    res.redirect('/');
+  }
 });
 
 /* get all the countries for either chau or myself */
 router.get('/:name', function(req, res, next) {
   console.log('router /'); 
-  /* get all the countries for either chau or myself */
-  var name = req.params.name;
-  console.log('name', name);
-  Map.find({ username: name }, function(err, maps) {
-    if (err) { throw err; }
-    console.log('maps ', maps);
-    var mapData = formatData(maps);
-    res.render('index', { map: mapData});
-  });
+  console.log('login is session req.session.passport', req.session.passport);
+  // check if there's a valid session
+  if (req.session.passport) {
+    /* get all the countries for either chau or myself */
+    var name = req.params.name;
+    console.log('name', name);
+    Map.find({ username: name }, function(err, maps) {
+      if (err) { throw err; }
+      console.log('maps ', maps);
+      var mapData = formatData(maps);
+      res.render('index', { map: mapData});
+    });
+  } else {
+    res.redirect('/');
+  }
 });
 
 /* format the data for Google Maps Chart */

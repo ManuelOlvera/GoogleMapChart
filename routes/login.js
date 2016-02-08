@@ -10,9 +10,11 @@ passport.use(new LocalStrategy(
     User.findOne({ username: username }, function(err, user) {
       if (err) { return done(err); }
       if (!user) {
+        console.log('incorrect username');
         return done(null, false, { message: 'Incorrect username.' });
       }
       if (!user.validPassword(password)) {
+        console.log('incorrect password');
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);
@@ -78,6 +80,12 @@ router.post('/login',
   passport.authenticate('local', { successRedirect: '/map',
                                    failureRedirect: '/' })
 );
+
+router.get('/logout', function(req, res) {
+  console.log('loging out');
+  req.logout();
+  res.redirect('/');
+});
 
 router.get('/', function(req, res) {
   console.log('login is session req.session.passport', req.session.passport);

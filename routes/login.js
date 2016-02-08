@@ -84,7 +84,7 @@ router.post('/login',
 router.get('/logout', function(req, res) {
   console.log('loging out');
   req.logout();
-  res.redirect('/');
+  res.render('login');
 });
 
 router.get('/', function(req, res) {

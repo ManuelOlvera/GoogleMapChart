@@ -1,0 +1,10 @@
+{
+  "db": {
+    "sandbox": {
+      "url": "mongodb://localhost/map"
+    },
+    "production": {
+      "url": ""
+    }    
+  }
+}

@@ -8,6 +8,7 @@ var mongoose = require('./model/db-connector');
 var session = require('express-session')
 var passport = require('passport');
 
+
 var routes = require('./routes/index');
 var api = require('./routes/api');
 var login = require('./routes/login');
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Use the session middleware
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
 app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.use('/', login);

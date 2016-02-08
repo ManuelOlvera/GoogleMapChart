@@ -21,14 +21,18 @@ passport.use(new LocalStrategy(
 ));
 
 passport.serializeUser(function(user, done) {
+  console.log('serializeUser user', user);  
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
+  console.log('deserializeUser id', id);
   User.findById(id, function(err, user) {
+    console.log('user found id', id);
     done(err, user);
   });
 });
+
 /* It handles login proccess */
 
 /* register the user */
@@ -76,12 +80,13 @@ router.post('/login',
 );
 
 router.get('/', function(req, res) {
-  console.log('rendering login page');
-  console.log('login is session active', req.session);
-  if (req.session) {
+  console.log('login is session req.session.passport', req.session.passport);
+  if (req.session.passport) {
     // there's an active session. go straight to map
+    console.log('rendering map page');
     res.redirect('/map');
   } else {
+    console.log('rendering login page');
     res.render('login'); 
   }
 });

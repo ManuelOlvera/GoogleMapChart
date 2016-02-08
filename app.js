@@ -5,9 +5,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('./model/db-connector');
+var session = require('express-session')
+var passport = require('passport');
 
 var routes = require('./routes/index');
 var api = require('./routes/api');
+var login = require('./routes/login');
 
 var app = express();
 
@@ -22,9 +25,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// Use the session middleware
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
+app.use(passport.initialize());
 
-app.use('/', routes);
+
+app.use('/', login);
 app.use('/api', api);
+app.use('/map', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

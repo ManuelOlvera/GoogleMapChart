@@ -64,4 +64,5 @@ function formatData(maps) {
   }
   return mapData;
 }
+
 module.exports = router;

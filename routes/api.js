@@ -41,7 +41,7 @@ router.post('/map', function(req, res, next) {
         saveNewCountry(map, res);
       } else {
         console.log('mot a new country');
-        res.redirect('/');
+        res.redirect('/map');
       }
     }  
         
@@ -54,7 +54,7 @@ function saveNewCountry (map, res) {
   map.save(function(err, map) {
     if (err) { throw err; }
     console.log('new country added', map);
-    res.redirect('/');
+    res.redirect('/map');
   });
 }
 module.exports = router;

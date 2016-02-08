@@ -1,11 +1,11 @@
 // Bring Mongoose into the app 
 var mongoose = require('mongoose');
-var config = require('../config');
 
 console.log('config', config);
 
 // Build the connection string 
-var dbURI = config.db.sandbox.url; 
+// var dbURI = 'mongodb://localhost/map'; 
+var dbURI = process.env.MONGOLAB_URI;
 
 // Create the database connection 
 mongoose.connect(dbURI); 

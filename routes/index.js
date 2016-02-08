@@ -48,12 +48,14 @@ router.get('/:name', function(req, res, next) {
 
 /* format the data for Google Maps Chart */
 function formatData(maps) {
+  var allCountries = require('../countries.json').countries;
+  console.log('allCountries', allCountries);
   console.log('formatdata maps', maps);
   var mapData = [['Country', 'Popularity']];
   var isBothMap = maps.length === 2;
   console.log('isBothMap', isBothMap);
-  if (maps.length !== 0) {
-    var countryObject = {};
+  var countryObject = {};
+  if (maps.length !== 0) {    
     maps.forEach(function(elem, index) {
       maps[index].countries.forEach(function(country) {
         var arr;
@@ -62,7 +64,7 @@ function formatData(maps) {
             // country visited by both of us
             arr = [country, 500];
           } else {
-            arr = [country, index * 1000]; // different colors for each of us
+            arr = [country, (index * 1000) + 1000]; // different colors for each of us
           }
         } else {
           arr = [country, 100];
@@ -74,6 +76,13 @@ function formatData(maps) {
       });
     });
   }
+  console.log('countryObject', countryObject);
+  allCountries.forEach(function(country) {
+    if (!countryObject[country.toLowerCase()]) {
+      mapData.push([country.toLowerCase(), 0]);
+    }
+  });
+  console.log('mapData', mapData);
   return mapData;
 }
 

@@ -7,7 +7,7 @@ router.post('/map', function(req, res, next) {
   console.log('post map');
   console.log('req.body ', req.body);
   var person = req.body.person,
-    country = req.body.country;
+    country = req.body.country.toLowerCase();
   console.log('person ', person);
   console.log('country ', country);
   
@@ -30,9 +30,7 @@ router.post('/map', function(req, res, next) {
       /* check if the country was previously inserted */
       map = map[0];
       map.countries.forEach(function(countryName) {
-        console.log(countryName.toLowerCase() === country.toLowerCase());
-        console.log('countryName.toLowerCase()', countryName.toLowerCase());
-        existingCountry = existingCountry || countryName.toLowerCase() === country.toLowerCase();
+        existingCountry = existingCountry || countryName === country;
       });
       
       if (!existingCountry) {

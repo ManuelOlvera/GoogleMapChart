@@ -2,8 +2,8 @@
 var mongoose = require('mongoose');
 
 // Build the connection string 
-// var dbURI = 'mongodb://localhost/map'; 
-var dbURI = process.env.MONGOLAB_URI;
+var dbURI = 'mongodb://localhost/map'; 
+// var dbURI = process.env.MONGOLAB_URI;
 
 console.log('dbURI', dbURI);
 

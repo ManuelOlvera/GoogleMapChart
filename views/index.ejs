@@ -16,6 +16,9 @@
     <!-- Google Maps Chart -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        
+    <!-- jquery blockui -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.js"></script>
     
     <script type="text/javascript">
       google.charts.load('current', {'packages':['geochart']});
@@ -37,10 +40,10 @@
   </head>
   <body>
     <ul class="nav nav-pills">
-      <li role="presentation" id="map-li"><a href="/map">Both</a></li>
-      <li role="presentation" id="chau-li"><a href="/map/chau">Chau</a></li>
-      <li role="presentation" id="manuel-li"><a href="/map/manuel">Manuel</a></li>
-      <li role="presentation"><a href="/logout">Logout</a></li>
+      <li role="presentation" id="map-li"><a href="/map" onclick="$.blockUI();">Both</a></li>
+      <li role="presentation" id="chau-li"><a href="/map/chau" onclick="$.blockUI();">Chau</a></li>
+      <li role="presentation" id="manuel-li"><a href="/map/manuel" onclick="$.blockUI();">Manuel</a></li>
+      <li role="presentation"><a href="/logout" onclick="$.blockUI();">Logout</a></li>
     </ul>
     <div id="regions_div" style="width: 900px; height: 500px;"></div>    
     <form class="navbar-form navbar-left" role="search" id="countryForm">
@@ -57,12 +60,12 @@
           <% } %>
         </select>
       </div>
-      <button type="button" class="btn btn-default" id="addCountryButton">Add Country</button>
-      <button type="button" class="btn btn-default" id="removeCountryButton">Remove Country</button>
+      <button class="btn btn-default" id="addCountryButton" onclick="$.blockUI();">Add Country</button>
+      <button class="btn btn-default" id="removeCountryButton" onclick="$.blockUI();">Remove Country</button>
     </form>
     <script type="text/javascript">
       $( document ).ready(function() {
-        $(".btn").click(function() {
+        $(".btn").click(function(event) {
           console.log(this);
           console.log(this.id);
           var ajaxType;
@@ -84,10 +87,11 @@
               console.log('textStatus', textStatus);
               console.log('errorThrown', errorThrown);
               console.log('jqXHR', jqXHR);
+              $.unblockUI();
               alert('something went wrong');
             }
           });
-          // event.preventDefault();
+          event.preventDefault();
         });
         
         var mapView = window.location.href.substring(window.location.href.lastIndexOf('/')+1);

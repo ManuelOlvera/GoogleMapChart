@@ -8,7 +8,6 @@ var mongoose = require('./model/db-connector');
 var session = require('express-session')
 var passport = require('passport');
 
-
 var routes = require('./routes/index');
 var api = require('./routes/api');
 var login = require('./routes/login');

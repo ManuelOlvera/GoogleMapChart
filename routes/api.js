@@ -2,12 +2,34 @@ var express = require('express'),
   router = express.Router(),
   Map = require('../model/map');
 
+router.delete('/map', function(req, res, next) {
+  console.log('delete country');
+  console.log('req.body ', req.body);
+  var person = req.body.person,
+    country = req.body.country;
+  console.log('person ', person);
+  console.log('country ', country);
+  Map.find({ username: person }, function(err, map) {
+    if (err) { throw err; }    
+    console.log('map ', map);
+    // removes the selected country from the country array
+    map[0].countries.splice(map[0].countries.indexOf(country), 1);
+    console.log('new map', map[0].countries);
+    map[0].save(function(err, map) {
+    if (err) { throw err; }
+      console.log('country removed', map);
+      // res.redirect('/map');
+      res.end();
+    });
+  });
+});
+
 /* post new country */
 router.post('/map', function(req, res, next) {
   console.log('post map');
   console.log('req.body ', req.body);
   var person = req.body.person,
-    country = req.body.country.toLowerCase();
+    country = req.body.country;
   console.log('person ', person);
   console.log('country ', country);
   
@@ -39,7 +61,8 @@ router.post('/map', function(req, res, next) {
         saveNewCountry(map, res);
       } else {
         console.log('mot a new country');
-        res.redirect('/map');
+        // res.redirect('/map');
+        res.end();
       }
     }  
         
@@ -52,7 +75,8 @@ function saveNewCountry (map, res) {
   map.save(function(err, map) {
     if (err) { throw err; }
     console.log('new country added', map);
-    res.redirect('/map');
+    // res.redirect('/map');
+    res.end();
   });
 }
 module.exports = router;

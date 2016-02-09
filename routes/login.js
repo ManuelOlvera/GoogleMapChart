@@ -89,7 +89,7 @@ router.get('/logout', function(req, res) {
 
 router.get('/', function(req, res) {
   console.log('login is session req.session.passport', req.session.passport);
-  if (req.session.passport) {
+  if (req.session.passport && req.session.passport.user) {
     // there's an active session. go straight to map
     console.log('rendering map page');
     res.redirect('/map');

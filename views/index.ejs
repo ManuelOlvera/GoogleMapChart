@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    
+    <!-- Google Maps Chart -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    
     <script type="text/javascript">
       google.charts.load('current', {'packages':['geochart']});
       google.charts.setOnLoadCallback(drawRegionsMap);
 
       function drawRegionsMap() {
         var map = <%- JSON.stringify(map) %>
+        var allCountries = <%- JSON.stringify(allCountries) %>;
         console.log('map', map);
         var data = google.visualization.arrayToDataTable(map);
         var options = {
@@ -19,27 +34,67 @@
         chart.draw(data, options);
       }
     </script>
-    <style>
-      ul li {
-        display:inline;
-      }
-    </style>
   </head>
   <body>
-    <ul>
-      <li><a href="/map/manuel">Manuel</a></li>
-      <li><a href="/map/chau">Chau</a></li>
-      <li><a href="/map">Both</a></li>
-      <li><a href="/logout">Logout</a></li>
+    <ul class="nav nav-pills">
+      <li role="presentation" id="map-li"><a href="/map">Both</a></li>
+      <li role="presentation" id="chau-li"><a href="/map/chau">Chau</a></li>
+      <li role="presentation" id="manuel-li"><a href="/map/manuel">Manuel</a></li>
+      <li role="presentation"><a href="/logout">Logout</a></li>
     </ul>
-    <div id="regions_div" style="width: 900px; height: 500px;"></div>
-    <form method="POST" action="/api/map">
-      <select id="person" name="person">
-        <option value="chau">Chau</option>
-        <option value="manuel">Manuel</option>
-      </select>
-      <input type="text" id="country" name="country"/>
-      <button type="submit">Send Country</button>
+    <div id="regions_div" style="width: 900px; height: 500px;"></div>    
+    <form class="navbar-form navbar-left" role="search" id="countryForm">
+      <div class="form-group">
+        <select id="person" name="person" class="form-control">
+          <option value="chau">Chau</option>
+          <option value="manuel">Manuel</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <select id="country" name="country" class="form-control">
+          <% for(var i = 0; i < allCountries.length; i++) { %>
+            <option value="<%= allCountries[i] %>"><%= allCountries[i] %></option>
+          <% } %>
+        </select>
+      </div>
+      <button type="button" class="btn btn-default" id="addCountryButton">Add Country</button>
+      <button type="button" class="btn btn-default" id="removeCountryButton">Remove Country</button>
     </form>
+    <script type="text/javascript">
+      $( document ).ready(function() {
+        $(".btn").click(function() {
+          console.log(this);
+          console.log(this.id);
+          var ajaxType;
+          if (this.id === 'removeCountryButton') {
+            ajaxType = 'DELETE';
+          } else if (this.id === 'addCountryButton') {
+            ajaxType = 'POST';
+          }
+          $.ajax({
+            url: '/api/map',
+            type: ajaxType,
+            data: JSON.stringify({ person: $('#person').val(), country: $('#country').val() }),
+            contentType: 'application/json',
+            success: function(data, textStatus, jqXHR) {
+              console.log('all good');
+              location.reload();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.log('textStatus', textStatus);
+              console.log('errorThrown', errorThrown);
+              console.log('jqXHR', jqXHR);
+              alert('something went wrong');
+            }
+          });
+          // event.preventDefault();
+        });
+        
+        var mapView = window.location.href.substring(window.location.href.lastIndexOf('/')+1);
+        $('#' + mapView + '-li').addClass('active');
+      });
+      
+   
+    </script>
   </body>
 </html>

@@ -1,17 +1,17 @@
 var express = require('express'),
   router = express.Router(),
-  Map = require('../model/map');
+  Map = require('../model/map'),
+  allCountries = require('../countries.json').countries;
 
 /* GET all countries for both me and chau */
 router.get('/', function(req, res, next) {
   console.log('login is session req.session.passport', req.session.passport);
   // check if there's a valid session
   if (req.session.passport) {
-    console.log('router /'); 
+    console.log('router /');
     /* get all the maps (chau's and mine) */
     Map.find({}, function(err, maps) {
       if (err) { throw err; }
-      console.log('maps ', maps);
       var joinedMap = []
       maps.forEach(function(elem, index) {
         maps[index].countries.forEach(function(country) {
@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
         });
       });
       var mapData = formatData(maps);
-      res.render('index', { map: mapData});
+      res.render('index', { map: mapData, allCountries: allCountries });
     });
   } else {
     res.redirect('/');
@@ -39,7 +39,7 @@ router.get('/:name', function(req, res, next) {
       if (err) { throw err; }
       console.log('maps ', maps);
       var mapData = formatData(maps);
-      res.render('index', { map: mapData});
+      res.render('index', { map: mapData, allCountries: allCountries });
     });
   } else {
     res.redirect('/');
@@ -48,12 +48,8 @@ router.get('/:name', function(req, res, next) {
 
 /* format the data for Google Maps Chart */
 function formatData(maps) {
-  var allCountries = require('../countries.json').countries;
-  console.log('allCountries', allCountries);
-  console.log('formatdata maps', maps);
   var mapData = [['Country', 'Popularity']];
-  var isBothMap = maps.length === 2;
-  console.log('isBothMap', isBothMap);
+  var isBothMap = maps.length === 2;  
   var countryObject = {};
   if (maps.length !== 0) {    
     maps.forEach(function(elem, index) {
@@ -70,19 +66,15 @@ function formatData(maps) {
           arr = [country, 100];
         }
         countryObject[country] = true;
-        console.log('countryObject', countryObject);
-        console.log('arr', arr);
         mapData.push(arr);
       });
     });
   }
-  console.log('countryObject', countryObject);
   allCountries.forEach(function(country) {
-    if (!countryObject[country.toLowerCase()]) {
-      mapData.push([country.toLowerCase(), 0]);
+    if (!countryObject[country]) {
+      mapData.push([country, 0]);
     }
   });
-  console.log('mapData', mapData);
   return mapData;
 }
 

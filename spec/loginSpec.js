@@ -1,9 +1,9 @@
 var request = require('request');
 var googleMapChart = require("../app.js");
 var base_url = 'http://localhost:3000/';
+var express = require('express');
 
 describe("long asynchronous specs", function() {
-  
   it('register process test', function(done) {
     request.post({
       url: base_url + 'register',

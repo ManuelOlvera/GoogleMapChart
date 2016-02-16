@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 // Build the connection string 
 // var dbURI = 'mongodb://localhost/map'; 
-var dbURI = process.env.MONGOLAB_URI;
+var dbURI = process.env.MONGOLAB_URI || 'mongodb://localhost/map';
 
 console.log('dbURI', dbURI);
 

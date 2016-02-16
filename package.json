@@ -21,7 +21,7 @@
   "devDependencies": {
     "jasmine": "^2.4.1",
     "request": "^2.69.0"
-  }
+  },
   "engines": {
     "node": "4.3.0"
   }
